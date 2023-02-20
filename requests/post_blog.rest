@@ -1,0 +1,8 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+    "author": "Flekica",
+    "url": "https://google.com/",
+    "title": "Skroz Novi User's blogpost"
+}
