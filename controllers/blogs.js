@@ -13,8 +13,13 @@ router.get("/", async (req, res) => {
 })
 
 router.post("/", async (req, res) => {
-  const blog = await Blog.create(req.body)
-  return res.json(blog)
+  if (req.user) {
+    const blog = await Blog.create(req.body)
+    blog.setUser(req.user)
+    return res.json(blog)
+  } else {
+    return res.status(401).json()
+  }
 })
 
 router.get("/:id", blogFinder, async (req, res) => {

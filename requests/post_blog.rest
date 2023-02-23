@@ -1,5 +1,6 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZsZWtpY2ExQGdtYWlsLmNvbSIsImlkIjo0LCJpYXQiOjE2NzcxNjkxMjR9.1IHxDyI73S8KTv5MPXLdjqFJeGE9CFS54ytqd37bFR0
 
 {
     "author": "Flekica",
