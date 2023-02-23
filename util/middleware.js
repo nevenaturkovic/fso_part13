@@ -5,6 +5,9 @@ const { SECRET } = require("../util/config")
 
 const errorHandler = (err, req, res, next) => {
   switch (err.message) {
+    case "unauthorized":
+        res.status(401)
+        break
     case "access denied":
       res.status(403)
       break

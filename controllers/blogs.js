@@ -31,10 +31,19 @@ router.get("/:id", blogFinder, async (req, res) => {
 })
 
 router.delete("/:id", async (req, res) => {
-  if ((await Blog.destroy({ where: { id: req.params.id } })) !== 0) {
-    return res.status(204).json()
+  if (!req.user) {
+    throw Error("unauthorized")
   }
-  throw Error("can't delete non existing")
+  const blog = await Blog.findByPk(req.params.id)
+  if (!blog) {
+    throw Error("can't delete non existing")
+  }
+
+  if (blog.userId !== req.user.id) {
+    throw Error("unauthorized")
+  }
+  blog.destroy()
+  return res.status(204).json()
 })
 
 router.put("/:id", blogFinder, async (req, res) => {
