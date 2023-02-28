@@ -32,8 +32,10 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   if (req.user) {
-    const blog = await Blog.create(req.body)
-    blog.setUser(req.user)
+    console.log("req.body", req.body)
+    console.log("req.user.id", req.user.id)
+    const blog = await Blog.create({ ...req.body, userId: req.user.id })
+    // blog.setUser(req.user)
     return res.json(blog)
   } else {
     return res.status(401).json()

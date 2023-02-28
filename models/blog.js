@@ -26,6 +26,23 @@ Blog.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    year: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isYear(value) {
+          if (
+            !(
+              Number(value) >= 1991 && Number(value) <= new Date().getFullYear()
+            )
+          ) {
+            throw new Error(
+              "an incorrect value is attempted to be given for a year written"
+            )
+            return true
+          }
+        },
+      },
+    },
   },
   {
     sequelize,
