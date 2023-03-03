@@ -1,5 +1,6 @@
 const router = require("express").Router()
 
+const { userExtractor } = require("../util/middleware")
 const { User, Blog, ReadingList } = require("../models")
 
 router.get("/", async (req, res) => {
@@ -22,7 +23,7 @@ router.get("/", async (req, res) => {
   res.json(users)
 })
 
-router.post("/", async (req, res) => {
+router.post("/", userExtractor, async (req, res) => {
   try {
     const user = await User.create(req.body)
     res.json(user)
