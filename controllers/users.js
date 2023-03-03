@@ -9,6 +9,14 @@ router.get("/", async (req, res) => {
         model: Blog,
         attributes: { exclude: ["userId"] },
       },
+      {
+        model: Blog,
+        as: "readings",
+        attributes: { exclude: ["userId"] },
+        through: {
+          attributes: [],
+        },
+      },
     ],
   })
   res.json(users)
@@ -31,11 +39,14 @@ router.get("/:username", async (req, res) => {
         model: Blog,
         attributes: { exclude: ["userId"] },
       },
-        {
-          model: Blog,
-          as: "readings",
-          attributes: { exclude: ["userId"] },
+      {
+        model: Blog,
+        as: "readings",
+        attributes: { exclude: ["userId"] },
+        through: {
+          attributes: ["id", "read"],
         },
+      },
     ],
   })
   if (user) {
