@@ -8,8 +8,8 @@ Blog.belongsTo(User)
 // Blog.sync({ alter: true })
 // User.sync({ alter: true })
 
-User.belongsToMany(Blog, { through: ReadingList })
-Blog.belongsToMany(User, { through: ReadingList })
+User.belongsToMany(Blog, { as: "readings", through: ReadingList })
+Blog.belongsToMany(User, { as: "readers", through: ReadingList })
 
 module.exports = {
   Blog,

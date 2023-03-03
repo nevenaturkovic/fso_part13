@@ -1,13 +1,15 @@
 const router = require("express").Router()
 
-const { User, Blog } = require("../models")
+const { User, Blog, ReadingList } = require("../models")
 
 router.get("/", async (req, res) => {
   const users = await User.findAll({
-    include: {
-      model: Blog,
-      attributes: { exclude: ["userId"] },
-    },
+    include: [
+      {
+        model: Blog,
+        attributes: { exclude: ["userId"] },
+      },
+    ],
   })
   res.json(users)
 })
@@ -22,7 +24,20 @@ router.post("/", async (req, res) => {
 })
 
 router.get("/:username", async (req, res) => {
-  const user = await User.findOne({ where: { username: req.params.username } })
+  const user = await User.findOne({
+    where: { username: req.params.username },
+    include: [
+      {
+        model: Blog,
+        attributes: { exclude: ["userId"] },
+      },
+        {
+          model: Blog,
+          as: "readings",
+          attributes: { exclude: ["userId"] },
+        },
+    ],
+  })
   if (user) {
     res.json(user)
   } else {
