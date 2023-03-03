@@ -33,19 +33,26 @@ router.post("/", userExtractor, async (req, res) => {
 })
 
 router.get("/:username", async (req, res) => {
+  let where = {}
+
+  if (req.query.read) {
+    where = { read: req.query.read }
+  }
+
   const user = await User.findOne({
     where: { username: req.params.username },
     include: [
-      {
-        model: Blog,
-        attributes: { exclude: ["userId"] },
-      },
+      // {
+      //   model: Blog,
+      //   attributes: { exclude: ["userId"] },
+      // },
       {
         model: Blog,
         as: "readings",
         attributes: { exclude: ["userId"] },
         through: {
           attributes: ["id", "read"],
+          where,
         },
       },
     ],
