@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken")
 const router = require("express").Router()
-
+const crypto = require("crypto")
 const { SECRET } = require("../util/config")
 const User = require("../models/user")
+const Session = require("../models/session")
 
 router.post("/", async (request, response) => {
   const body = request.body
@@ -20,12 +21,22 @@ router.post("/", async (request, response) => {
     })
   }
 
-  const userForToken = {
-    username: user.username,
-    id: user.id,
+  if (user.disabled) {
+    return response.status(401).json({
+      error: "user disabled",
+    })
   }
 
-  const token = jwt.sign(userForToken, SECRET)
+  const token = crypto.randomBytes(128).toString("base64")
+
+  const session = await Session.create({ userId: user.id, token })
+
+  // const userForToken = {
+  //   username: user.username,
+  //   id: user.id,
+  // }
+
+  // const token = jwt.sign(userForToken, SECRET)
 
   response.status(200).send({ token, username: user.username, name: user.name })
 })

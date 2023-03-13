@@ -1,13 +1,15 @@
 const jwt = require("jsonwebtoken")
 const User = require("../models/user")
+const Session = require("../models/session")
+
 require("express-async-errors")
 const { SECRET } = require("../util/config")
 
 const errorHandler = (err, req, res, next) => {
   switch (err.message) {
     case "unauthorized":
-        res.status(401)
-        break
+      res.status(401)
+      break
     case "access denied":
       res.status(403)
       break
@@ -42,12 +44,17 @@ const tokenExtractor = (request, response, next) => {
 
 const userExtractor = async (request, response, next) => {
   if (request.token) {
-    const decodedToken = jwt.verify(request.token, SECRET)
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: "token invalid" })
+    const session = await Session.findOne({
+      where: {
+        token: request.token,
+      },
+    })
+    if (session) {
+      const user = await User.findByPk(session.userId)
+      if (!user.disabled) {
+        request.user = user
+      }
     }
-    const user = await User.findByPk(decodedToken.id)
-    request.user = user
   }
   next()
 }
